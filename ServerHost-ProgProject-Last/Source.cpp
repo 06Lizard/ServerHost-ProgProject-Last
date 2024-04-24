@@ -29,7 +29,8 @@ int main() {
         return 1;
     }
 
-    if (listen(serverSocket, 5) == SOCKET_ERROR) {
+    if (listen(serverSocket, 1) == SOCKET_ERROR) // second argument decides limit of clients
+    { 
         std::cerr << "Error listening on socket: " << WSAGetLastError() << "\n";
         closesocket(serverSocket);
         WSACleanup();
@@ -41,6 +42,7 @@ int main() {
     sockaddr_in clientAddr;
     int clientAddrSize = sizeof(clientAddr);
     SOCKET clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
+    while (true) {
     if (clientSocket == INVALID_SOCKET) {
         std::cerr << "Error accepting connection: " << WSAGetLastError() << "\n";
         closesocket(serverSocket);
@@ -48,15 +50,21 @@ int main() {
         return 1;
     }
 
-    char buffer[1024];
-    int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
-    if (bytesReceived == SOCKET_ERROR) {
-        std::cerr << "Error receiving data: " << WSAGetLastError() << "\n";
+        char buffer[1024];
+        int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
+        if (bytesReceived == SOCKET_ERROR) {
+            std::cerr << "Error receiving data: " << WSAGetLastError() << "\n";
+            break;
+        }
+        else {
+            buffer[bytesReceived] = '\0';
+            std::cout << "Received message: \n" << buffer << "\n";
+        }
     }
-    else {
-        buffer[bytesReceived] = '\0';
-        std::cout << "Received message: " << buffer << "\n";
-    }
+
+    std::cout << "Press enter to exit program" << std::endl;
+    std::cin.get();
+    // send
 
     closesocket(clientSocket);
     closesocket(serverSocket);
