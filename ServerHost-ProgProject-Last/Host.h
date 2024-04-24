@@ -15,7 +15,6 @@ private:
 public:
     Host() {
         CreatePort();
-        //CreateConection();
     }
 
     int CreatePort() {
@@ -53,10 +52,9 @@ public:
         std::cout << "Server listening for incoming connections...\n";
     }
 
-    int reciveMSG() {
+    int conectClient() {
         int clientAddrSize = sizeof(clientAddr);
         clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
-        while (true) {
             if (clientSocket == INVALID_SOCKET) {
                 std::cerr << "Error accepting connection: " << WSAGetLastError() << "\n";
                 closesocket(serverSocket);
@@ -66,18 +64,21 @@ public:
             else {
                 std::cout << "client conected" << std::endl;
             }
+    }
+
+    int reciveMSG() {
+        conectClient();
 
             char buffer[1024];
             int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
             if (bytesReceived == SOCKET_ERROR) {
                 std::cerr << "Error receiving data: " << WSAGetLastError() << "\n";
-                break;
+                return 1;
             }
             else {
                 buffer[bytesReceived] = '\0';
                 std::cout << "Received message: \n" << buffer << "\n";
             }
-        }
 
         return 0;
     }
