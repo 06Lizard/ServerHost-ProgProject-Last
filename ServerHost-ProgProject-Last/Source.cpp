@@ -1,8 +1,15 @@
 #include <iostream>
 #include <winsock2.h>
+#include "Host.h"
 
-#pragma comment(lib, "ws2_32.lib")
+int main() {
+    Host host;
 
+    host.reciveMSG();
+}
+
+
+/*
 int main() {
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -49,6 +56,9 @@ int main() {
         WSACleanup();
         return 1;
     }
+    else {
+        std::cout << "client conected" << std::endl;
+    }
 
         char buffer[1024];
         int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
@@ -62,6 +72,8 @@ int main() {
         }
     }
 
+
+
     std::cout << "Press enter to exit program" << std::endl;
     std::cin.get();
     // send
@@ -73,3 +85,21 @@ int main() {
     return 0;
 }
 //test
+
+
+/*
+#include "Host.h"
+
+int main() {
+    // create host
+
+    if (Host.msg.recived)
+    {
+        //do stuff depending on msg
+    }
+
+    int clientNMR = 1;
+    Host.sendMSG("hi", clientNMR);
+
+}
+*/
