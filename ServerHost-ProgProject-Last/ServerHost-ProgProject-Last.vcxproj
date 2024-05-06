@@ -128,11 +128,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientHandler.cpp" />
     <ClCompile Include="Host.cpp" />
+    <ClCompile Include="SocketManager.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Host.h" />
+    <ClInclude Include="SocketManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
