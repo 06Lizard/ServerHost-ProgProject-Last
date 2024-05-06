@@ -43,10 +43,11 @@ void Host::HandleClients() {
             std::cerr << "Sucsesefully accepted client connection." << std::endl;
 
         //switching to asynd and having this in the class itself could be good
-        std::thread clientThread([clientSocket]() {
+        std::thread clientThread([clientSocket]() // make a new thread for that client
+        {
             ClientHandler handler(clientSocket);
-            handler.ReceiveMessages();
-            });
+            handler.ReceiveMessages(); // tells client handler to look for recived messages
+        });
         clientThread.detach(); // Detach the thread to let it run independently
     }
 }

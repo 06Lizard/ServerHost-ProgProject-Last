@@ -31,6 +31,7 @@ bool SocketManager::Start(int port) {
 SOCKET SocketManager::AcceptClient() {
     sockaddr_in clientAddr;
     int clientAddrSize = sizeof(clientAddr);
+    std::cerr << "Looking for client connection." << std::endl;
     return accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
 }
 
