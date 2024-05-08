@@ -8,7 +8,8 @@ ClientHandler::~ClientHandler() {
     closesocket(clientSocket);
 }
 
-void ClientHandler::ReceiveMessages() {
+void ClientHandler::ReceiveMessages() 
+{
     char buffer[1024];
     int bytesReceived;
 
@@ -23,4 +24,9 @@ void ClientHandler::ReceiveMessages() {
     else {
         std::cerr << "Error receiving data." << std::endl;
     }
+}
+
+void ClientHandler::SendMessages() 
+{
+
 }

@@ -27,6 +27,7 @@ Host::Host() {
 
 
 Host::~Host() {
+    socketManager.~SocketManager();
     WSACleanup();
     std::cerr << "Closed server." << std::endl;
 }

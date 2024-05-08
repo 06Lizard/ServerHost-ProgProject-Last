@@ -11,4 +11,6 @@ public:
     ~ClientHandler();
 
     void ReceiveMessages();
+    void SendMessages();
+    void LogMSG();
 };
