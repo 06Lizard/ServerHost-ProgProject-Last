@@ -1,54 +1,55 @@
-#include "host.h"
+#include "Host.h"
 #include "ClientHandler.h"
-#include <thread>
 
-Host::Host() {
-    // initialize Winsock
+Host::Host() : running(true) {
+    // Initialize Winsock
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         std::cerr << "Failed to initialize Winsock." << std::endl;
         return;
     }
-    else
-        std::cerr << "Sucsesefully initialized Winsock." << std::endl;
+    else {
+        std::cerr << "Successfully initialized Winsock." << std::endl;
+    }
 
-    // open the socet
-    if (!socketManager.Start(12345)) // hardcoded port for now
-    {
+    // Open the socket
+    if (!socketManager.Start(12345)) { // hardcoded port for now
         std::cerr << "Failed to start server." << std::endl;
         WSACleanup();
         return;
     }
-    else
-        std::cerr << "Sucsesefully started server." << std::endl;
+    else {
+        std::cerr << "Successfully started server." << std::endl;
+    }
 
+    // Handle clients in the main thread
     HandleClients();
 }
 
-
 Host::~Host() {
-    socketManager.~SocketManager();
+    running = false;
+    socketManager.Close();
     WSACleanup();
     std::cerr << "Closed server." << std::endl;
 }
 
 void Host::HandleClients() {
-    while (true) {
-        //could be good making this in to it's own function and thread
+    while (running) {
         SOCKET clientSocket = socketManager.AcceptClient();
         if (clientSocket == INVALID_SOCKET) {
             std::cerr << "Error accepting client connection." << std::endl;
             continue;
         }
-        else
-            std::cerr << "Sucsesefully accepted client connection." << std::endl;
+        else {
+            std::cerr << "Successfully accepted client connection." << std::endl;
+        }
 
-        //switching to asynd and having this in the class itself could be good
-        std::thread clientThread([clientSocket]() // make a new thread for that client
-        {
-            ClientHandler handler(clientSocket);
-            handler.ReceiveMessages(); // tells client handler to look for recived messages
-        });
+        std::thread clientThread(&Host::HandleClient, this, clientSocket);
         clientThread.detach(); // Detach the thread to let it run independently
     }
+}
+
+void Host::HandleClient(SOCKET clientSocket) {
+    ClientHandler handler(clientSocket);
+    handler.ReceiveMSG(); // tells client handler to look for received messages
 }
