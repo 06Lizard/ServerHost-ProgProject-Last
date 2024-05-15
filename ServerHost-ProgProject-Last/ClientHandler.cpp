@@ -45,5 +45,6 @@ std::future<int> ClientHandler::SendMSG(std::string msg) {
 int ClientHandler::LogMSG(std::string msg) {
     save = msg;
     std::cout << "Saved msg: " << msg << std::endl;
+    SendMSG(save);
     return 0;
 }
