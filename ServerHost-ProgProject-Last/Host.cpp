@@ -1,7 +1,7 @@
 #include "Host.h"
 #include "ClientHandler.h"
 
-Host::Host() : running(true) {
+Host::Host() : running(true), threadPool(4) {
     // Initialize Winsock
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -35,17 +35,25 @@ Host::~Host() {
 
 void Host::HandleClients() {
     while (running) {
-        SOCKET clientSocket = socketManager.AcceptClient();
-        if (clientSocket == INVALID_SOCKET) {
-            std::cerr << "Error accepting client connection." << std::endl;
-            continue;
-        }
-        else {
-            std::cerr << "Successfully accepted client connection." << std::endl;
-        }
+        std::vector<SOCKET> clientSockets = socketManager.CheckEvents();
 
-        std::thread clientThread(&Host::HandleClient, this, clientSocket);
-        clientThread.detach(); // Detach the thread to let it run independently
+        for (SOCKET clientSocket : clientSockets) 
+        {
+            if (clientSocket == socketManager.GetListeningSocket()) 
+            {
+                SOCKET newClientSocket = socketManager.AcceptClient();
+                if (clientSocket == INVALID_SOCKET) {
+                    std::cerr << "Error accepting client connection." << std::endl;
+                    continue;
+                }
+                else {
+                    std::cerr << "Successfully accepted client connection." << std::endl;
+                    threadPool.enqueue([this, newClientSocket]() { HandleClient(newClientSocket);  });
+                }
+            }
+            else
+                threadPool.enqueue([this, clientSocket]() { HandleClient(clientSocket); });
+        }
     }
 }
 

@@ -1,13 +1,14 @@
 #pragma once
 #include "SocketManager.h"
+#include "ThreadPool.h"
 #include <iostream>
-#include <thread>
 #include <vector>
 #include <atomic>
 
 class Host {
 private:
     SocketManager socketManager;
+    ThreadPool threadPool;
     std::atomic<bool> running;
 
 public:

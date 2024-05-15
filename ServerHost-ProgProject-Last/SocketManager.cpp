@@ -40,15 +40,39 @@ bool SocketManager::Start(int port) {
     return true;
 }
 
-SOCKET SocketManager::AcceptClient() {
+SOCKET SocketManager::AcceptClient() const {
     sockaddr_in clientAddr;
     int clientAddrSize = sizeof(clientAddr);
     std::cerr << "Waiting for client connection." << std::endl;
-    return accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
+    SOCKET clientSocket = accept(serverSocket, reinterpret_cast<sockaddr*>(&clientAddr), &clientAddrSize);
+    if (clientSocket == INVALID_SOCKET) {
+        std::cerr << "Error accepting client connection." << std::endl;
+    }
+    return clientSocket;
 }
 
 void SocketManager::Close() {
     if (serverSocket != INVALID_SOCKET) {
         closesocket(serverSocket);
     }
+}
+
+SOCKET SocketManager::GetListeningSocket() const {
+    return serverSocket;
+}
+
+std::vector<SOCKET> SocketManager::CheckEvents() const {
+    std::vector<SOCKET> clientSockets;
+    fd_set readSet;
+    FD_ZERO(&readSet);
+    FD_SET(serverSocket, &readSet);
+    timeval timeout = { 0, 0 };
+    if (select(0, &readSet, nullptr, nullptr, &timeout) == SOCKET_ERROR) {
+        std::cerr << "Error in select." << std::endl;
+        return clientSockets;
+    }
+    if (FD_ISSET(serverSocket, &readSet)) {
+        clientSockets.push_back(AcceptClient());
+    }
+    return clientSockets;
 }

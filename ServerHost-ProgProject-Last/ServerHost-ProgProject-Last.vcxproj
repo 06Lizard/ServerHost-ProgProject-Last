@@ -132,11 +132,13 @@
     <ClCompile Include="Host.cpp" />
     <ClCompile Include="SocketManager.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="Host.h" />
     <ClInclude Include="SocketManager.h" />
+    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

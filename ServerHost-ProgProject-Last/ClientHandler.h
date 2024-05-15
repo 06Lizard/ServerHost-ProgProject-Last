@@ -16,5 +16,5 @@ public:
 
     void ReceiveMSG();
     std::future<int> SendMSG(std::string msg);
-    int LogMSG(std::string msg);
+    std::future<int> LogMSG(std::string msg);
 };
