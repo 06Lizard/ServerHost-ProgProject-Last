@@ -35,11 +35,11 @@ Host::~Host() {
 
 void Host::HandleClients() {
     while (running) {
-        std::vector<SOCKET> clientSockets = socketManager.CheckEvents();
+        std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // make class for client where we sort up clientSocket + name in a map?
 
         for (SOCKET clientSocket : clientSockets) 
         {
-            if (clientSocket == socketManager.GetListeningSocket()) 
+            if (clientSocket == socketManager.GetListeningSocket())
             {
                 SOCKET newClientSocket = socketManager.AcceptClient();
                 if (clientSocket == INVALID_SOCKET) {

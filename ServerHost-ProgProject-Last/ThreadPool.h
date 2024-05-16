@@ -9,9 +9,24 @@
 
 class ThreadPool {
 public:
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="numThreads"></param>
     ThreadPool(size_t numThreads);
+
+    /// <summary>
+    /// 
+    /// </summary>
     ~ThreadPool();
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="F"></typeparam>
+    /// <typeparam name="...Args"></typeparam>
+    /// <param name="f"></param>
+    /// <param name="...args"></param>
     template<class F, class... Args>
     void enqueue(F&& f, Args&&... args);
 

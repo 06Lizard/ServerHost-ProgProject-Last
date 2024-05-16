@@ -21,9 +21,9 @@ void ClientHandler::ReceiveMSG() {
     }
 }
 
-std::future<int> ClientHandler::SendMSG(std::string msg) {
-    return std::async(std::launch::async, [this, msg]() -> int {
-        if (send(clientSocket, msg.c_str(), strlen(msg.c_str()), 0) == SOCKET_ERROR) {
+std::future<int> ClientHandler::SendMSG(std::string msg, SOCKET rcp) {
+    return std::async(std::launch::async, [this, msg, rcp]() -> int { // Add rcp to the capture list
+        if (send(rcp, msg.c_str(), strlen(msg.c_str()), 0) == SOCKET_ERROR) {
             std::cerr << "Error sending data: " << WSAGetLastError() << " with the message '" << msg << "'" << std::endl;
             return WSAGetLastError();
         }
@@ -31,14 +31,17 @@ std::future<int> ClientHandler::SendMSG(std::string msg) {
             std::cout << "Successfully sent message: " << msg << std::endl;
             return 0;
         }
-        });
+    });
 }
 
 std::future<int> ClientHandler::LogMSG(std::string msg) {
     return std::async(std::launch::async, [this, msg]() -> int {
+        // handle where to save message at
         save = msg;
-        std::cout << "Save: " << save << std::endl;
-        SendMSG("gay");
+
+        // handle message in some way, like where to send        
+        SendMSG("handled message", clientSocket);
+
         return 0;
     });
 }

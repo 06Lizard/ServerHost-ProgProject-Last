@@ -11,10 +11,34 @@ private:
     std::atomic<bool> running;
 
 public:
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="socket"></param>
     ClientHandler(SOCKET socket);
+
+    /// <summary>
+    /// 
+    /// </summary>
     ~ClientHandler();
 
+    /// <summary>
+    /// 
+    /// </summary>
     void ReceiveMSG();
-    std::future<int> SendMSG(std::string msg);
+
+    /// <summary>
+    /// Sends the message 'msg' to client 'rcp'
+    /// </summary>
+    /// <param name="msg"></param>
+    /// <param name=""></param>
+    /// <returns></returns>
+    std::future<int> SendMSG(std::string msg, SOCKET rcp);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="msg"></param>
+    /// <returns></returns>
     std::future<int> LogMSG(std::string msg);
 };
