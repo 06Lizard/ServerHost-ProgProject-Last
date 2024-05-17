@@ -14,7 +14,7 @@ ThreadPool::ThreadPool(size_t numThreads) : stop(false) {
                 }
                 task();
             }
-        });
+            });
     }
 }
 

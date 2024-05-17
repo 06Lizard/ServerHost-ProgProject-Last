@@ -1,5 +1,8 @@
 #pragma once
 #include "SocketManager.h"
+#include "ClientManager.h"
+#include "ClientHandler.h"
+#include "LoginClient.h"
 #include "ThreadPool.h"
 #include <iostream>
 #include <vector>
@@ -8,31 +11,16 @@
 class Host {
 private:
     SocketManager socketManager;
+    ClientManager clientManager;
     ThreadPool threadPool;
     std::atomic<bool> running;
 
 public:
-    /// <summary>
-    /// Constructor that inizialises WSADATA
-    /// Then it starts the SocketManager
-    /// Then goes to HandleClients
-    /// </summary>
     Host();
-
-    /// <summary>
-    /// Deconstructs the entire server (add gracefull Shutdown?)
-    /// </summary>
     ~Host();
 
 private:
-    /// <summary>
-    /// Handles all the clients, acsepting them and/or sending them to the treadpool executing the function HandleClients
-    /// </summary>
     void HandleClients();
-
-    /// <summary>
-    /// Handles the inputed client via the threadpool
-    /// </summary>
-    /// <param name="clientSocket"></param>
     void HandleClient(SOCKET clientSocket);
+    void AddClient();
 };

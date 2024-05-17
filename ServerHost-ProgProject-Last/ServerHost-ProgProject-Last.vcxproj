@@ -129,14 +129,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClientHandler.cpp" />
+    <ClCompile Include="ClientManager.cpp" />
     <ClCompile Include="Host.cpp" />
+    <ClCompile Include="LoginClient.cpp" />
     <ClCompile Include="SocketManager.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientHandler.h" />
+    <ClInclude Include="ClientManager.h" />
     <ClInclude Include="Host.h" />
+    <ClInclude Include="LoginClient.h" />
     <ClInclude Include="SocketManager.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>

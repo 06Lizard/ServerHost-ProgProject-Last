@@ -1,5 +1,4 @@
 #include "Host.h"
-#include "ClientHandler.h"
 
 Host::Host() : running(true), threadPool(4) {
     // Initialize Winsock
@@ -35,29 +34,39 @@ Host::~Host() {
 
 void Host::HandleClients() {
     while (running) {
-        std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // make class for client where we sort up clientSocket + name in a map?
+        std::vector<SOCKET> clientSockets = socketManager.CheckEvents();
 
-        for (SOCKET clientSocket : clientSockets) 
-        {
-            if (clientSocket == socketManager.GetListeningSocket())
-            {
+        for (SOCKET clientSocket : clientSockets) {
+            if (clientSocket == socketManager.GetListeningSocket()) {
                 SOCKET newClientSocket = socketManager.AcceptClient();
-                if (clientSocket == INVALID_SOCKET) {
-                    std::cerr << "Error accepting client connection." << std::endl;
-                    continue;
+                std::cout << "newClientSocket made" << std::endl;
+                if (newClientSocket != INVALID_SOCKET) {
+                    LoginClient loginClient(newClientSocket, &clientManager);
                 }
                 else {
-                    std::cerr << "Successfully accepted client connection." << std::endl;
-                    threadPool.enqueue([this, newClientSocket]() { HandleClient(newClientSocket);  });
+                    std::cerr << "Error loggin in" << std::endl;
+                    closesocket(newClientSocket);
                 }
             }
-            else
+            else {
                 threadPool.enqueue([this, clientSocket]() { HandleClient(clientSocket); });
+            }
         }
     }
 }
 
 void Host::HandleClient(SOCKET clientSocket) {
-    ClientHandler handler(clientSocket);
-    handler.ReceiveMSG(); // tells client handler to look for received messages
+    ClientHandler handler(clientSocket, &clientManager);
+    handler.ReceiveMSG();
+}
+
+                
+
+
+//threadPool.enqueue([this, clientSocket]() { AddClient(); });
+void Host::AddClient() { //curently not in use
+    SOCKET newClientSocket = socketManager.AcceptClient();
+    if (newClientSocket != INVALID_SOCKET) {
+        LoginClient loginClient(newClientSocket, &clientManager);
+    }
 }

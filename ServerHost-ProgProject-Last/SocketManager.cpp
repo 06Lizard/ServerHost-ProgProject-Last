@@ -48,6 +48,11 @@ SOCKET SocketManager::AcceptClient() const {
     if (clientSocket == INVALID_SOCKET) {
         std::cerr << "Error accepting client connection." << std::endl;
     }
+    else 
+    {
+        std::cout << "Successfully accepted client connection." << std::endl;
+    }
+
     return clientSocket;
 }
 
