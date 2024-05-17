@@ -38,6 +38,7 @@ void Host::HandleClients() {
 
         for (SOCKET clientSocket : clientSockets) {
             if (clientSocket == socketManager.GetListeningSocket()) {
+                std::cout << "listening socket" << std::endl;
                 SOCKET newClientSocket = socketManager.AcceptClient();
                 std::cout << "newClientSocket made" << std::endl;
                 if (newClientSocket != INVALID_SOCKET) {

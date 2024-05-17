@@ -77,7 +77,7 @@ std::vector<SOCKET> SocketManager::CheckEvents() const {
         return clientSockets;
     }
     if (FD_ISSET(serverSocket, &readSet)) {
-        clientSockets.push_back(AcceptClient());
+        clientSockets.push_back(serverSocket);
     }
     return clientSockets;
 }
