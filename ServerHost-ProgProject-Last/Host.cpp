@@ -34,48 +34,67 @@ Host::~Host() {
 
 void Host::HandleClients() {
     while (running) {
-        //std::cout << "while" << std::endl;
-        std::vector<SOCKET> clientSockets = socketManager.CheckEvents();
+        std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // list of all sockets with events
 
         for (SOCKET clientSocket : clientSockets) {
-            if (clientSocket == socketManager.GetListeningSocket()) {
-                std::cout << "listening socket" << std::endl;
-                SOCKET newClientSocket = socketManager.AcceptClient();
-                std::cout << "newClientSocket made" << std::endl;
-                if (newClientSocket != INVALID_SOCKET) {
-                    LoginClient loginClient(newClientSocket, &clientManager);
-                    std::cout << "sakak" << std::endl;
-                }
-                else {
-                    std::cerr << "Error loggin in" << std::endl;
-                    closesocket(newClientSocket);
-                    // make this run async
-                    //make sure client sockets that are in the login stage don't get sent to the threadpool below, exclude em from check event
-                }
+            if (clientSocket == socketManager.GetListeningSocket()) // new client event
+            {
+                //std::cout << "listening socket" << std::endl;
+                //SOCKET newClientSocket = socketManager.AcceptClient();
+                //std::cout << "newClientSocket made" << std::endl;
+                //if (newClientSocket != INVALID_SOCKET) {
+                //    LoginClient loginClient(newClientSocket, &clientManager);
+                //    std::cout << "back to host" << std::endl;//debuging for now
+                //    Sleep(3000); //debuging for now
+                //}
+                //else 
+                //{
+                //    std::cerr << "Error loggin in" << std::endl;
+                //    closesocket(newClientSocket);
+                //    // make this run async
+                //    //make sure client sockets that are in the login stage don't get sent to the threadpool below, exclude em from check event
+                //}
+
+                threadPool.enqueue([this]() { AddClient(); });
+
+                std::cout << "ifel" << std::endl;//debuging for now
+                Sleep(3000);//debuging for now
+
             }
-            else {
+            else // getMSG event
+            {
                 threadPool.enqueue([this, clientSocket]() { HandleClient(clientSocket); });
             }
-            //std::cout << "for" << std::endl;
-
+            std::cout << "if" << std::endl;//debuging for now
+            Sleep(3000);//debuging for now
         }
+        std::cout << "for" << std::endl;//debuging for now
+        Sleep(3000);//debuging for now
     }
 }
 
-void Host::HandleClient(SOCKET clientSocket) {
+void Host::HandleClient(SOCKET clientSocket) // acceppted clients
+{
     std::cout << "H->HC" << std::endl;
 
     ClientHandler handler(clientSocket, &clientManager);
     handler.ReceiveMSG();
 }
 
-                
+void Host::AddClient() // new clients
+{ 
+    // make this run async
+    //make sure client sockets that are in the login stage don't get sent to the accepted clients, exclude em from check event
 
-
-//threadPool.enqueue([this, clientSocket]() { AddClient(); });
-void Host::AddClient() { //curently not in use
+    std::cout << "listening socket" << std::endl;
     SOCKET newClientSocket = socketManager.AcceptClient();
+    std::cout << "newClientSocket made" << std::endl;
     if (newClientSocket != INVALID_SOCKET) {
         LoginClient loginClient(newClientSocket, &clientManager);
+    }
+    else
+    {
+        std::cerr << "Error loggin in" << std::endl;
+        closesocket(newClientSocket);
     }
 }
