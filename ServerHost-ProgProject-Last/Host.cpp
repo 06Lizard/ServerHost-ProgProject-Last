@@ -34,6 +34,7 @@ Host::~Host() {
 
 void Host::HandleClients() {
     while (running) {
+        //std::cout << "while" << std::endl;
         std::vector<SOCKET> clientSockets = socketManager.CheckEvents();
 
         for (SOCKET clientSocket : clientSockets) {
@@ -47,16 +48,22 @@ void Host::HandleClients() {
                 else {
                     std::cerr << "Error loggin in" << std::endl;
                     closesocket(newClientSocket);
+                    // make this run async
+                    //make sure client sockets that are in the login stage don't get sent to the threadpool below, exclude em from check event
                 }
             }
             else {
                 threadPool.enqueue([this, clientSocket]() { HandleClient(clientSocket); });
             }
+            //std::cout << "for" << std::endl;
+
         }
     }
 }
 
 void Host::HandleClient(SOCKET clientSocket) {
+    std::cout << "H->HC" << std::endl;
+
     ClientHandler handler(clientSocket, &clientManager);
     handler.ReceiveMSG();
 }

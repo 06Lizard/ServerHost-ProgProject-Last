@@ -30,3 +30,5 @@ bool ClientManager::ValidatePassword(const std::string& id, const std::string& p
     }
     return false;
 }
+
+// make this a textfile
