@@ -31,4 +31,11 @@ bool ClientManager::ValidatePassword(const std::string& id, const std::string& p
     return false;
 }
 
+std::string ClientManager::str_tolower(std::string str) {
+    std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) {
+        return std::tolower(c);
+        });
+    return str;
+}
+
 // make this a textfile

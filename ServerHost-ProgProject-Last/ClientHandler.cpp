@@ -23,9 +23,9 @@ void ClientHandler::ReceiveMSG() {
 
 void ClientHandler::ProcessMessage(const std::string& msg) {
     // Expected format: "<recipient_id>:<message>"
-    size_t delimiterPos = msg.find(':');
-    if (delimiterPos != std::string::npos) {
-        std::string recipientId = msg.substr(0, delimiterPos);
+    size_t delimiterPos = msg.find(':'); //find the first ':' in msg
+    if (delimiterPos != std::string::npos) { // if there was a ':'
+        std::string recipientId = clientManager->str_tolower(msg.substr(0, delimiterPos));
         std::string actualMsg = msg.substr(delimiterPos + 1);
 
         if (clientManager->ClientExists(recipientId)) {

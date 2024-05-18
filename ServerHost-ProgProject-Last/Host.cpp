@@ -8,7 +8,7 @@ Host::Host() : running(true), threadPool(4) {
         return;
     }
     else {
-        std::cerr << "Successfully initialized Winsock." << std::endl;
+        std::cout << "Successfully initialized Winsock." << std::endl;
     }
 
     // Open the socket
@@ -18,7 +18,7 @@ Host::Host() : running(true), threadPool(4) {
         return;
     }
     else {
-        std::cerr << "Successfully started server." << std::endl;
+        std::cout << "Successfully started server." << std::endl;
     }
 
     // Handle clients in the main thread
@@ -29,7 +29,7 @@ Host::~Host() {
     running = false;
     socketManager.Close();
     WSACleanup();
-    std::cerr << "Closed server." << std::endl;
+    std::cout << "Closed server." << std::endl;
 }
 
 void Host::HandleClients() {
@@ -44,6 +44,7 @@ void Host::HandleClients() {
                 std::cout << "newClientSocket made" << std::endl;
                 if (newClientSocket != INVALID_SOCKET) {
                     LoginClient loginClient(newClientSocket, &clientManager);
+                    std::cout << "sakak" << std::endl;
                 }
                 else {
                     std::cerr << "Error loggin in" << std::endl;

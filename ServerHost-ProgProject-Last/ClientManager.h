@@ -3,6 +3,8 @@
 #include <string>
 #include <winsock2.h>
 #include <mutex>
+#include <algorithm>
+#include <cctype>
 
 class ClientManager {
 private:
@@ -25,4 +27,7 @@ public:
 
     /// Verifies if the given password matches the stored password for the client
     bool ValidatePassword(const std::string& id, const std::string& password); // New method to verify passwords
+
+    /// Makes str to lowercase
+    std::string str_tolower(std::string str);
 };
