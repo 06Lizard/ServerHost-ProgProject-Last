@@ -70,12 +70,12 @@ void Host::AddClient() {
     SOCKET newClientSocket = socketManager.AcceptClient();
     if (newClientSocket != INVALID_SOCKET) {
         //threadPool.enqueue([this, newClientSocket]() {
-            LoginClient loginClient(newClientSocket, &clientManager);
-            // Post login, client socket is managed by ClientManager
-          //});
+        LoginClient loginClient(newClientSocket, &clientManager);
+        // Post login, client socket is managed by ClientManager
+        //});
     }
     else {
         std::cerr << "Error logging in" << std::endl;
         closesocket(newClientSocket);
     }
-} 
+} // as soon as this finishes the client disconects
