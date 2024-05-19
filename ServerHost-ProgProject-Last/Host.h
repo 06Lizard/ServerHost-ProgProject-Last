@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <atomic>
+#include <unordered_map>
 
 class Host {
 private:
@@ -14,6 +15,8 @@ private:
     ClientManager clientManager;
     ThreadPool threadPool;
     std::atomic<bool> running;
+    std::unordered_map<SOCKET, std::unique_ptr<LoginClient>> loginClients; // Store pointers to manage the lifecycle
+    std::vector<SOCKET> acseptedCLientSockets;
 
 public:
     Host();

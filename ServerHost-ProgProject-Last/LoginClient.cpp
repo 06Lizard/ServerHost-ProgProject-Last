@@ -1,22 +1,20 @@
 #include "LoginClient.h"
-#include <cctype> // For std::isalpha
-#include <algorithm> // For std::all_of>
+#include <cctype>
+#include <algorithm>
 
 LoginClient::LoginClient(SOCKET clientSocket, ClientManager* clientManager)
     : handler(clientSocket, clientManager), clientManager(clientManager) {
     running = EchoBack("Type 'login' to login to server, type 'signup' to sign up to server", clientSocket);
-    //std::cout << "awaiting login/signup" << std::endl;
-    while (running) {
-        //std::cout << "loop" << std::endl;
 
+    while (running) {
         std::string msg = ReceiveLoginMSG(clientSocket);
         if (msg == "login") {
             Login(clientSocket);
-            break; //exits while
+            break;
         }
         else if (msg == "signup") {
             SignUp(clientSocket);
-            break; //exits while
+            break;
         }
         else {
             running = EchoBack("Invalid command. Please type 'login' or 'signup'.", clientSocket);
@@ -26,38 +24,40 @@ LoginClient::LoginClient(SOCKET clientSocket, ClientManager* clientManager)
 
 void LoginClient::Login(SOCKET clientSocket) {
     running = EchoBack("Login initiated, enter username.", clientSocket);
-    if (!running) { return; } // if echo failed exit login
+    if (!running) { return; }
     std::string username;
-    while (running)
-    {
+    while (running) {
         username = clientManager->str_tolower(ReceiveLoginMSG(clientSocket));
-        if (!std::all_of(username.begin(), username.end(), ::isalpha) || username == "login" || username == "signup" || username == "server") { // add a check for existing usernames too
+        if (!std::all_of(username.begin(), username.end(), ::isalpha) || username == "login" || username == "signup" || username == "server") {
             running = EchoBack("Invalid username. Please enter a valid username:", clientSocket);
         }
         else if (!clientManager->ClientExists(username)) {
             running = EchoBack("User not found, re-enter username.", clientSocket);
-        } else break; //if valid user
+        }
+        else {
+            break;
+        }
     }
 
-    if (!running) { return;  } // exit login if not running = true
+    if (!running) { return; }
 
-    running = EchoBack("User found, enter pasword.", clientSocket);
+    running = EchoBack("User found, enter password.", clientSocket);
 
-    if (!running) { return; } // exit login if not running = true
+    if (!running) { return; }
 
     for (int attempts = 0; attempts < 3; ++attempts) {
         std::string password = ReceiveLoginMSG(clientSocket);
         if (clientManager->ValidatePassword(username, password)) {
             EchoBack("Login successful.", clientSocket);
-            //clientManager->SetClientOnline(username, clientSocket); // haven't implemented online / offline function yet and might never
+            clientManager->AddClient(username, clientSocket, password); // Add client to ClientManager
             return;
         }
         else if (attempts < 2) {
             running = EchoBack("Invalid password. Try again:", clientSocket);
-            if (!running) { return; } // exit login if not running = true
+            if (!running) { return; }
         }
         else {
-            handler.SendMSG("Too many failed attempts. Disconnecting...", clientSocket); // this is still send msg becuse it's gona disconect client anyways
+            handler.SendMSG("Too many failed attempts. Disconnecting...", clientSocket);
             closesocket(clientSocket);
         }
     }
@@ -65,22 +65,23 @@ void LoginClient::Login(SOCKET clientSocket) {
 
 void LoginClient::SignUp(SOCKET clientSocket) {
     running = EchoBack("SignUp initiated, enter username:", clientSocket);
-    if (!running) { return; } // exit signup if not running = true
+    if (!running) { return; }
 
     std::string username;
-    while (running)
-    {
+    while (running) {
         username = clientManager->str_tolower(ReceiveLoginMSG(clientSocket));
         if (!std::all_of(username.begin(), username.end(), ::isalpha) || username == "login" || username == "signup" || username == "server") {
             running = EchoBack("Invalid username. Please enter a valid username:", clientSocket);
         }
         else if (clientManager->ClientExists(username)) {
-            running = EchoBack("User already exists- Please enter another username:", clientSocket);
-            username = clientManager->str_tolower(ReceiveLoginMSG(clientSocket));
-        } else break;
+            running = EchoBack("User already exists. Please enter another username:", clientSocket);
+        }
+        else {
+            break;
+        }
     }
 
-    if (!running) { return; } // exit signup if not running = true
+    if (!running) { return; }
 
     std::string password = "";
     std::string verifyPassword = "";
@@ -89,11 +90,12 @@ void LoginClient::SignUp(SOCKET clientSocket) {
         password = ReceiveLoginMSG(clientSocket);
         running = EchoBack("Verify password:", clientSocket);
         verifyPassword = ReceiveLoginMSG(clientSocket);
-        if (password != verifyPassword || password == "") {
-            running = EchoBack("Passwords does not match.", clientSocket);
+        if (password != verifyPassword || password.empty()) {
+            running = EchoBack("Passwords do not match.", clientSocket);
         }
-    } while (running && password != verifyPassword || running && password == "");
-    clientManager->AddClient(username, clientSocket, password);
+    } while (running && (password != verifyPassword || password.empty()));
+
+    clientManager->AddClient(username, clientSocket, password); // Add client to ClientManager
     EchoBack("Signup successful.", clientSocket);
 }
 
@@ -104,17 +106,18 @@ std::string LoginClient::ReceiveLoginMSG(SOCKET clientSocket) {
         return std::string(buffer, result);
     }
     else {
+        running = false;
         return "";
     }
 }
 
-bool LoginClient::EchoBack(std::string msg, SOCKET clientSocket) {
-    for (int i = 0; i < 3; i++) { //lops 3 times
+bool LoginClient::EchoBack(const std::string msg, SOCKET clientSocket) {
+    for (int i = 0; i < 3; ++i) {
         std::future<int> futureResult = handler.SendMSG(msg, clientSocket);
         if (futureResult.get() == 0) {
-            break; //exits for
+            return true;
         }
-        else if (i > 1) { //third atempt or more
+        else if (i >= 2) {
             closesocket(clientSocket);
             return false;
         }

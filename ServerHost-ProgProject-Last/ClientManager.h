@@ -8,9 +8,9 @@
 
 class ClientManager {
 private:
-    std::unordered_map<std::string, SOCKET> clients;
-    std::unordered_map<std::string, std::string> passwords; // New map to store passwords
-    std::mutex mtx;
+    std::unordered_map<std::string, SOCKET> clients;  // Stores client sockets
+    std::unordered_map<std::string, std::string> passwords; // Stores client passwords
+    std::mutex mtx; // Mutex for thread safety
 
 public:
     /// Adds a client with the given identifier and password
@@ -26,8 +26,8 @@ public:
     bool ClientExists(const std::string& id);
 
     /// Verifies if the given password matches the stored password for the client
-    bool ValidatePassword(const std::string& id, const std::string& password); // New method to verify passwords
+    bool ValidatePassword(const std::string& id, const std::string& password);
 
-    /// Makes str to lowercase
+    /// Converts a string to lowercase
     std::string str_tolower(std::string str);
 };

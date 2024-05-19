@@ -33,11 +33,11 @@ void ClientHandler::ProcessMessage(const std::string& msg) {
             SendMSG(actualMsg, recipientSocket);
         }
         else {
-            std::cerr << "Recipient not found: " << recipientId << std::endl;
+            SendMSG("Recipient not found: ", clientSocket);
         }
     }
     else {
-        std::cerr << "Invalid message format received: " << msg << std::endl;
+        SendMSG("Invalid message format received: ", clientSocket);
     }
 }
 

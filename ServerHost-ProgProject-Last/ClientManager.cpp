@@ -14,7 +14,11 @@ void ClientManager::RemoveClient(const std::string& id) {
 
 SOCKET ClientManager::GetClientSocket(const std::string& id) {
     std::lock_guard<std::mutex> lock(mtx);
-    return clients.at(id);
+    auto it = clients.find(id);
+    if (it != clients.end()) {
+        return it->second;
+    }
+    return INVALID_SOCKET; // Return invalid socket if client not found
 }
 
 bool ClientManager::ClientExists(const std::string& id) {
@@ -25,10 +29,7 @@ bool ClientManager::ClientExists(const std::string& id) {
 bool ClientManager::ValidatePassword(const std::string& id, const std::string& password) {
     std::lock_guard<std::mutex> lock(mtx);
     auto it = passwords.find(id);
-    if (it != passwords.end() && it->second == password) {
-        return true;
-    }
-    return false;
+    return it != passwords.end() && it->second == password;
 }
 
 std::string ClientManager::str_tolower(std::string str) {
@@ -37,5 +38,3 @@ std::string ClientManager::str_tolower(std::string str) {
         });
     return str;
 }
-
-// make this a textfile
