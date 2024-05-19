@@ -8,22 +8,34 @@
 
 class ClientManager {
 private:
-    std::unordered_map<std::string, SOCKET> clients;  // Stores client sockets
-    std::unordered_map<std::string, std::string> passwords; // Stores client passwords
+    int idx = 0; // add better indecks
+    struct client
+    {
+        std::string username;
+        std::string password;
+        SOCKET clientsSocket;
+    };
+    std::unordered_map<int, client> clientS;
     std::mutex mtx; // Mutex for thread safety
 
 public:
     /// Adds a client with the given identifier and password
-    void AddClient(const std::string& id, SOCKET socket, const std::string& password);
+    int AddClient(SOCKET clientSocket);
+
+    void LoginClient(const std::string username, const std::string password, int idx);
 
     /// Removes a client with the given identifier
-    void RemoveClient(const std::string& id);
+    void RemoveClient(int idx);
 
     /// Gets the socket associated with the client identifier
-    SOCKET GetClientSocket(const std::string& id);
+    SOCKET* GetClientSocket(int idx);
+
+    std::vector<int> GetClientIdxS();
+
+    int ID_FromUsr(std::string username);
 
     /// Checks if a client exists with the given identifier
-    bool ClientExists(const std::string& id);
+    bool ClientExists(int idx);
 
     /// Verifies if the given password matches the stored password for the client
     bool ValidatePassword(const std::string& id, const std::string& password);

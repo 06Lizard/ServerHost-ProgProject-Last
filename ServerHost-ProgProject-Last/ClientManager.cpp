@@ -1,35 +1,67 @@
 #include "ClientManager.h"
 
-void ClientManager::AddClient(const std::string& id, SOCKET socket, const std::string& password) {
+int ClientManager::AddClient(SOCKET clientSocket) {
     std::lock_guard<std::mutex> lock(mtx);
-    clients[id] = socket;
-    passwords[id] = password; // Store the password
+    if (clientSocket == INVALID_SOCKET) { return -1; }
+    client clit;
+    clit.clientsSocket = clientSocket;
+    clientS[idx] = clit;
+    idx++;
+    return idx-1;
 }
 
-void ClientManager::RemoveClient(const std::string& id) {
+void ClientManager::LoginClient(const std::string username, const std::string password, int idx) {
     std::lock_guard<std::mutex> lock(mtx);
-    clients.erase(id);
-    passwords.erase(id); // Remove the password
+    clientS[idx].username = username;
+    clientS[idx].password = password;               
 }
 
-SOCKET ClientManager::GetClientSocket(const std::string& id) {
+void ClientManager::RemoveClient(int idx) {
     std::lock_guard<std::mutex> lock(mtx);
-    auto it = clients.find(id);
-    if (it != clients.end()) {
-        return it->second;
+    clientS.erase(idx);    
+}
+
+SOCKET* ClientManager::GetClientSocket(int idx) {
+    std::lock_guard<std::mutex> lock(mtx);
+    auto it = clientS.find(idx);
+    if (it != clientS.end()) {
+        return &it->second.clientsSocket;
     }
-    return INVALID_SOCKET; // Return invalid socket if client not found
+    SOCKET invalid = INVALID_SOCKET;
+    return &invalid; // Return invalid socket if client not found
 }
 
-bool ClientManager::ClientExists(const std::string& id) {
+std::vector<int> ClientManager::GetClientIdxS() {
     std::lock_guard<std::mutex> lock(mtx);
-    return clients.find(id) != clients.end();
+    std::vector<int> clientIdxS;
+
+    for (auto& value : clientS) {
+        clientIdxS.push_back(value.first);
+    }
+
+    return clientIdxS;
+}
+
+int ClientManager::ID_FromUsr(std::string username) {
+    std::lock_guard<std::mutex> lock(mtx);
+    for (auto& value : clientS) {
+        if (value.second.username == username) {
+            return value.first;
+        }
+    }
+    return -1; // !(usr == found)
+}
+
+bool ClientManager::ClientExists(int idx) {
+    std::lock_guard<std::mutex> lock(mtx);
+    return clientS.find(idx) != clientS.end();    
 }
 
 bool ClientManager::ValidatePassword(const std::string& id, const std::string& password) {
     std::lock_guard<std::mutex> lock(mtx);
-    auto it = passwords.find(id);
-    return it != passwords.end() && it->second == password;
+    /*auto it = passwords.find(id);
+    return it != passwords.end() && it->second == password;*/
+    return true;
 }
 
 std::string ClientManager::str_tolower(std::string str) {

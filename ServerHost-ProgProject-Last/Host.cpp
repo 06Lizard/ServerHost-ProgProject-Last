@@ -34,15 +34,10 @@ Host::~Host() {
 
 void Host::HandleClients() {
     while (running) {
-        std::cout << "while" << std::endl;
-        Sleep(2000);
         std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // list of all sockets with events
-        std::cout << "check event" << std::endl;
-        Sleep(2000);
 
         for (SOCKET clientSocket : clientSockets) {
-            std::cout << "for" << std::endl;
-            Sleep(2000);
+            std::cout << "for new" << std::endl;
             if (clientSocket == socketManager.GetListeningSocket()) {
                 std::cout << "if" << std::endl;
                 Sleep(2000);
@@ -50,32 +45,34 @@ void Host::HandleClients() {
                 std::cout << "if back" << std::endl; // client socket gets invalid or is straight up disconected as client always looses conection, selution could be to return a add client in here
                 Sleep(2000);
             }
-            else {
-                std::cout << "else" << std::endl;
-                Sleep(2000);
-                threadPool.enqueue([this, clientSocket]() { HandleClient(clientSocket); });
-            }
+        }
+
+        for (int clientIdx : clientManager.GetClientIdxS()) {
+            std::cout << "old for" << std::endl;
+            Sleep(2000);
+            threadPool.enqueue([this, clientIdx]() { HandleClient(clientIdx); });
         }
     }
 }
 
-void Host::HandleClient(SOCKET clientSocket) {
+void Host::HandleClient(int clientIdx) {
     std::cout << "H->HC" << std::endl;
 
-    ClientHandler handler(clientSocket, &clientManager);
+    ClientHandler handler(clientIdx, &clientManager);
     handler.ReceiveMSG();
 }
 
 void Host::AddClient() {
-    SOCKET newClientSocket = socketManager.AcceptClient();
-    if (newClientSocket != INVALID_SOCKET) {
+    int idx = clientManager.AddClient(socketManager.AcceptClient());
+    if (idx != INVALID_SOCKET) {
         //threadPool.enqueue([this, newClientSocket]() {
-        LoginClient loginClient(newClientSocket, &clientManager);
+        LoginClient loginClient(idx, &clientManager);
         // Post login, client socket is managed by ClientManager
         //});
     }
     else {
         std::cerr << "Error logging in" << std::endl;
-        closesocket(newClientSocket);
+        closesocket(*clientManager.GetClientSocket(idx));
+        clientManager.RemoveClient(idx);
     }
 } // as soon as this finishes the client disconects

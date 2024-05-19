@@ -4,12 +4,12 @@
 
 class LoginClient {
 public:
-    LoginClient(SOCKET clientSocket, ClientManager* clientManager);
+    LoginClient(int idx, ClientManager* clientManager);
 private:
-    void Login(SOCKET clientSocket);
-    void SignUp(SOCKET clientSocket);
-    std::string ReceiveLoginMSG(SOCKET clientSocket);
-    bool EchoBack(std::string msg, SOCKET clientSocket);
+    void Login(int idx);
+    void SignUp(int idx);
+    std::string ReceiveLoginMSG(SOCKET* clientSocket);
+    bool EchoBack(std::string msg, SOCKET* clientSocket);
     ClientHandler handler;
     ClientManager* clientManager;
     bool running;

@@ -24,6 +24,6 @@ public:
 
 private:
     void HandleClients();
-    void HandleClient(SOCKET clientSocket);
+    void HandleClient(int clientIdx);
     void AddClient();
 };

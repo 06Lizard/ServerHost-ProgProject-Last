@@ -7,18 +7,18 @@
 
 class ClientHandler {
 private:
-    SOCKET clientSocket;
+    int idx;
     std::string save;
     std::string clientId;
     ClientManager* clientManager;
     std::atomic<bool> running;
 
 public:
-    ClientHandler(SOCKET socket, ClientManager* manager);
+    ClientHandler(int idx, ClientManager* manager);
     ~ClientHandler();
 
     void ReceiveMSG();
-    std::future<int> SendMSG(std::string msg, SOCKET rcp);
+    std::future<int> SendMSG(std::string msg, SOCKET* rcp);
     std::future<int> LogMSG(std::string msg);
 
 private:
