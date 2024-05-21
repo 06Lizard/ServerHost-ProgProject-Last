@@ -41,21 +41,21 @@ void Host::HandleClients() {
 
         for (SOCKET clientSocket : clientSockets) 
         {
-            std::cout << "for new" << std::endl;
+            //std::cout << "for new" << std::endl;
             if (clientSocket == socketManager.GetListeningSocket()) 
             {
-                std::cout << "if" << std::endl;
-                Sleep(2000);
+                //std::cout << "if" << std::endl;
+                //Sleep(2000);
                 AddClient();
-                std::cout << "if back" << std::endl; // client socket gets invalid or is straight up disconected as client always looses conection, selution could be to return a add client in here
-                Sleep(2000);
+                //std::cout << "if back" << std::endl; // client socket gets invalid or is straight up disconected as client always looses conection, selution could be to return a add client in here
+                //Sleep(2000);
             }
         }
 
         for (int clientIdx : clientManager.GetClientIdxS()) 
         {
-            std::cout << "old for" << std::endl;
-            Sleep(2000);
+            //std::cout << "old for" << std::endl;
+            //Sleep(2000);
             threadPool.enqueue([this, clientIdx]() { HandleClient(clientIdx); });
         }
     }
@@ -63,7 +63,7 @@ void Host::HandleClients() {
 
 void Host::HandleClient(int clientIdx) 
 {
-    std::cout << "H->HC" << std::endl;
+    //std::cout << "H->HC" << std::endl;
 
     ClientHandler handler(clientIdx, &clientManager);
     handler.ReceiveMSG();

@@ -38,7 +38,8 @@ void ClientHandler::ProcessMessage(const std::string& msg)
 {
     // Expected format: "<recipient_id>:<message>"
     size_t delimiterPos = msg.find(':'); //find the first ':' in msg
-    if (delimiterPos != std::string::npos) { // if there was a ':'
+    if (delimiterPos != std::string::npos) // if there was a ':'
+    { 
         int rcvidx = clientManager->ID_FromUsr(clientManager->str_tolower(msg.substr(0, delimiterPos)));
         std::string actualMsg = msg.substr(delimiterPos + 1);
 
@@ -60,7 +61,7 @@ void ClientHandler::ProcessMessage(const std::string& msg)
 std::future<int> ClientHandler::SendMSG(std::string msg, SOCKET* rcp)
 {
     return std::async(std::launch::async, [this, msg, rcp]() -> int
-        {
+    {
         if (send(*rcp, msg.c_str(), strlen(msg.c_str()), 0) == SOCKET_ERROR)
         {
             PrintError("Error sending data '" + std::to_string(WSAGetLastError()) + "' with the message '" + msg + "'");

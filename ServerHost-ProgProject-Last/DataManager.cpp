@@ -1,5 +1,6 @@
 #include "DataManager.h"
 
+// Messages sometimes not arranged in the txt file because of async
 void DataManager::LogMessage(const std::string& data)
 {
     if (logFile.is_open() == false)

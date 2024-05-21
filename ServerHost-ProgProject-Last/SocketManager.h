@@ -3,8 +3,9 @@
 #include <ws2tcpip.h>
 #include <iostream>
 #include <vector>
+#include "Colors.h"
 
-class SocketManager
+class SocketManager : public Colors
 {
 private:
     SOCKET serverSocket;
