@@ -5,7 +5,8 @@
 #include <future>
 #include "ClientManager.h"
 
-class ClientHandler {
+class ClientHandler 
+{
 private:
     int idx;
     std::string save;

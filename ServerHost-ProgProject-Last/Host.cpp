@@ -36,9 +36,11 @@ void Host::HandleClients() {
     while (running) {
         std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // list of all sockets with events
 
-        for (SOCKET clientSocket : clientSockets) {
+        for (SOCKET clientSocket : clientSockets) 
+        {
             std::cout << "for new" << std::endl;
-            if (clientSocket == socketManager.GetListeningSocket()) {
+            if (clientSocket == socketManager.GetListeningSocket()) 
+            {
                 std::cout << "if" << std::endl;
                 Sleep(2000);
                 AddClient();
@@ -47,7 +49,8 @@ void Host::HandleClients() {
             }
         }
 
-        for (int clientIdx : clientManager.GetClientIdxS()) {
+        for (int clientIdx : clientManager.GetClientIdxS()) 
+        {
             std::cout << "old for" << std::endl;
             Sleep(2000);
             threadPool.enqueue([this, clientIdx]() { HandleClient(clientIdx); });
@@ -55,22 +58,26 @@ void Host::HandleClients() {
     }
 }
 
-void Host::HandleClient(int clientIdx) {
+void Host::HandleClient(int clientIdx) 
+{
     std::cout << "H->HC" << std::endl;
 
     ClientHandler handler(clientIdx, &clientManager);
     handler.ReceiveMSG();
 }
 
-void Host::AddClient() {
+void Host::AddClient() 
+{
     int idx = clientManager.AddClient(socketManager.AcceptClient());
-    if (idx != INVALID_SOCKET) {
+    if (idx != INVALID_SOCKET) 
+    {
         //threadPool.enqueue([this, newClientSocket]() {
         LoginClient loginClient(idx, &clientManager);
         // Post login, client socket is managed by ClientManager
         //});
     }
-    else {
+    else 
+    {
         std::cerr << "Error logging in" << std::endl;
         closesocket(*clientManager.GetClientSocket(idx));
         clientManager.RemoveClient(idx);

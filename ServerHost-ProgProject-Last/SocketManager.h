@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 
-class SocketManager {
+class SocketManager
+{
 private:
     SOCKET serverSocket;
     sockaddr_in serverAddr;

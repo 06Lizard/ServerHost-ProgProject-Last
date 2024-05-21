@@ -1,9 +1,13 @@
 #include "ThreadPool.h"
 
-ThreadPool::ThreadPool(size_t numThreads) : stop(false) {
-    for (size_t i = 0; i < numThreads; ++i) {
-        threads.emplace_back([this]() {
-            while (true) {
+ThreadPool::ThreadPool(size_t numThreads) : stop(false) 
+{
+    for (size_t i = 0; i < numThreads; ++i) 
+    {
+        threads.emplace_back([this]() 
+        {
+            while (true)
+            {
                 std::function<void()> task;
                 {
                     std::unique_lock<std::mutex> lock(queueMutex);
@@ -14,17 +18,17 @@ ThreadPool::ThreadPool(size_t numThreads) : stop(false) {
                 }
                 task();
             }
-            });
+        });
     }
 }
 
-ThreadPool::~ThreadPool() {
-    {
-        std::unique_lock<std::mutex> lock(queueMutex);
-        stop = true;
-    }
+ThreadPool::~ThreadPool()
+{
+    std::unique_lock<std::mutex> lock(queueMutex);
+    stop = true;
     condition.notify_all();
-    for (std::thread& thread : threads) {
+    for (std::thread& thread : threads) 
+    {
         thread.join();
     }
 }

@@ -6,15 +6,17 @@
 #include <algorithm>
 #include <cctype>
 
-class ClientManager {
+class ClientManager 
+{
 private:
-    int idx = 0; // add better indecks
     struct client
     {
         std::string username;
         std::string password;
         SOCKET clientsSocket;
     };
+
+    int idx = 0; // add better indecks
     std::unordered_map<int, client> clientS;
     std::mutex mtx; // Mutex for thread safety
 

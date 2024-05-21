@@ -6,7 +6,8 @@
 #include <mutex>
 #include <condition_variable>
 
-class ThreadPool {
+class ThreadPool
+{
 public:
     /// <summary>
     /// 
@@ -38,7 +39,8 @@ private:
 };
 
 template<class F, class... Args>
-void ThreadPool::enqueue(F&& f, Args&&... args) {
+void ThreadPool::enqueue(F&& f, Args&&... args) 
+{
     {
         std::unique_lock<std::mutex> lock(queueMutex);
         tasks.emplace(std::bind(std::forward<F>(f), std::forward<Args>(args)...));

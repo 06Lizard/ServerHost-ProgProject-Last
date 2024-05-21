@@ -9,7 +9,8 @@
 #include <atomic>
 #include <unordered_map>
 
-class Host {
+class Host 
+{
 private:
     SocketManager socketManager;
     ClientManager clientManager;
