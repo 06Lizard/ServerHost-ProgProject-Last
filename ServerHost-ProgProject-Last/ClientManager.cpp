@@ -66,7 +66,7 @@ bool ClientManager::ClientExists(int idx)
     return clientS.find(idx) != clientS.end();    
 }
 
-bool ClientManager::ValidatePassword(const std::string& id, const std::string& password)
+bool ClientManager::ValidatePassword(const std::string& username, const std::string& password)
 {
     std::lock_guard<std::mutex> lock(mtx);
     /*auto it = passwords.find(id);
