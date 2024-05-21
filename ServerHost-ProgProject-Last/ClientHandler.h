@@ -4,8 +4,9 @@
 #include <string>
 #include <future>
 #include "ClientManager.h"
+#include "Colors.h"
 
-class ClientHandler 
+class ClientHandler : public Colors
 {
 private:
     int idx;
@@ -20,7 +21,6 @@ public:
 
     void ReceiveMSG();
     std::future<int> SendMSG(std::string msg, SOCKET* rcp);
-    std::future<int> LogMSG(std::string msg);
 
 private:
     void ProcessMessage(const std::string& msg);

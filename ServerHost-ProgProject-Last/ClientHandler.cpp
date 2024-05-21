@@ -23,12 +23,12 @@ void ClientHandler::ReceiveMSG()
         }
         else if (bytesReceived == 0)
         {
-            std::cout << "lost connection to server." << std::endl;
+            PrintWarning("Lost connection to client.");
             break;
         }
         else
         {
-            std::cerr << "Error receiving listening data. " << WSAGetLastError() << std::endl;
+            PrintError("Error receiving listening data. " + std::to_string(WSAGetLastError()));
             break;
         }
     }
@@ -63,24 +63,13 @@ std::future<int> ClientHandler::SendMSG(std::string msg, SOCKET* rcp)
         {
         if (send(*rcp, msg.c_str(), strlen(msg.c_str()), 0) == SOCKET_ERROR)
         {
-            std::cerr << "Error sending data '" << WSAGetLastError() << "' with the message '" << msg << "'" << std::endl;
+            PrintError("Error sending data '" + std::to_string(WSAGetLastError()) + "' with the message '" + msg + "'");
             return WSAGetLastError();
         }
         else
         {
-            std::cout << "Successfully sent message '" << msg << "'" << std::endl;
+            PrintSuccessful("Successfully sent message '" + msg + "'");
             return 0;
         }
-    });
-}
-
-std::future<int> ClientHandler::LogMSG(std::string msg) 
-{
-    return std::async(std::launch::async, [this, msg]() -> int 
-        {
-        save = msg;
-        // Handle the message
-        SendMSG("handled message", clientManager->GetClientSocket(idx));
-        return 0;
     });
 }

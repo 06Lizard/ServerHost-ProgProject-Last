@@ -3,22 +3,25 @@
 Host::Host() : running(true), threadPool(4) {
     // Initialize Winsock
     WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        std::cerr << "Failed to initialize Winsock." << std::endl;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) 
+    {
+        PrintError("Failed to initialize Winsock.");
         return;
     }
-    else {
-        std::cout << "Successfully initialized Winsock." << std::endl;
+    else 
+    {
+        PrintSuccessful("Successfully initialized Winsock.");
     }
 
     // Open the socket
     if (!socketManager.Start(12345)) { // hardcoded port for now
-        std::cerr << "Failed to start server." << std::endl;
+        PrintError("Failed to start server.");
         WSACleanup();
         return;
     }
-    else {
-        std::cout << "Successfully started server." << std::endl;
+    else 
+    {
+        PrintSuccessful("Successfully started server.");
     }
 
     // Handle clients in the main thread
@@ -29,7 +32,7 @@ Host::~Host() {
     running = false;
     socketManager.Close();
     WSACleanup();
-    std::cout << "Closed server." << std::endl;
+    PrintWarning("Closed server.");
 }
 
 void Host::HandleClients() {
@@ -78,7 +81,7 @@ void Host::AddClient()
     }
     else 
     {
-        std::cerr << "Error logging in" << std::endl;
+        PrintError("Error logging in.");
         closesocket(*clientManager.GetClientSocket(idx));
         clientManager.RemoveClient(idx);
     }

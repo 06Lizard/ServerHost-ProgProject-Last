@@ -130,6 +130,8 @@
   <ItemGroup>
     <ClCompile Include="ClientHandler.cpp" />
     <ClCompile Include="ClientManager.cpp" />
+    <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="Host.cpp" />
     <ClCompile Include="LoginClient.cpp" />
     <ClCompile Include="SocketManager.cpp" />
@@ -139,6 +141,8 @@
   <ItemGroup>
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="ClientManager.h" />
+    <ClInclude Include="Colors.h" />
+    <ClInclude Include="DataManager.h" />
     <ClInclude Include="Host.h" />
     <ClInclude Include="LoginClient.h" />
     <ClInclude Include="SocketManager.h" />

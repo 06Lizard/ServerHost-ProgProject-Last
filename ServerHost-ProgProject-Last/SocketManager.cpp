@@ -20,7 +20,7 @@ bool SocketManager::Start(int port)
     }
     else 
     {
-        std::cerr << "serverSocket created" << std::endl;
+        std::cerr << "ServerSocket created" << std::endl;
     }
 
     serverAddr.sin_family = AF_INET;

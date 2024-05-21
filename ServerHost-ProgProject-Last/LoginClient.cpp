@@ -76,7 +76,7 @@ void LoginClient::Login(int idx)
 
 void LoginClient::SignUp(int idx) 
 {
-    running = EchoBack("SignUp initiated, enter username.", clientManager->GetClientSocket(idx));
+    running = EchoBack("Sign up initiated, enter username.", clientManager->GetClientSocket(idx));
     if (!running) { return; }
 
     std::string username;
@@ -109,7 +109,7 @@ void LoginClient::SignUp(int idx)
         verifyPassword = ReceiveLoginMSG(clientManager->GetClientSocket(idx));
         if (password != verifyPassword || password.empty()) 
         {
-            running = EchoBack("Passwords do not match.", clientManager->GetClientSocket(idx));
+            running = EchoBack("Passwords does not match.", clientManager->GetClientSocket(idx));
         }
     } while (running && (password != verifyPassword || password.empty()));
 
@@ -134,7 +134,8 @@ std::string LoginClient::ReceiveLoginMSG(SOCKET* clientSocket) // make this over
 
 bool LoginClient::EchoBack(const std::string msg, SOCKET* clientSocket) 
 {
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) 
+    {
         std::future<int> futureResult = handler.SendMSG(msg, clientSocket);
         if (futureResult.get() == 0)
         {
@@ -142,7 +143,7 @@ bool LoginClient::EchoBack(const std::string msg, SOCKET* clientSocket)
         }
         else if (i >= 2) 
         {
-            std::cerr << "disconecting server" << std::endl;
+            std::cerr << "Disconecting server." << std::endl;
             closesocket(*clientSocket);
             return false;
         }

@@ -8,8 +8,9 @@
 #include <vector>
 #include <atomic>
 #include <unordered_map>
+#include "Colors.h"
 
-class Host 
+class Host : public Colors
 {
 private:
     SocketManager socketManager;

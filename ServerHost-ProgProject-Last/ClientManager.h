@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cctype>
 
-class ClientManager 
+class ClientManager
 {
 private:
     struct client
