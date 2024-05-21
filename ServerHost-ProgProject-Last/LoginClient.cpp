@@ -103,7 +103,7 @@ void LoginClient::SignUp(int idx)
     std::string verifyPassword = "";
     do 
     {
-        running = EchoBack("Enter new password.", clientManager->GetClientSocket(idx));
+        running = EchoBack("Enter new password. ", clientManager->GetClientSocket(idx));
         password = ReceiveLoginMSG(clientManager->GetClientSocket(idx));
         running = EchoBack("Verify password.", clientManager->GetClientSocket(idx));
         verifyPassword = ReceiveLoginMSG(clientManager->GetClientSocket(idx));
