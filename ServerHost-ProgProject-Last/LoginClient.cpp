@@ -35,7 +35,7 @@ void LoginClient::Login(int idx)
         username = clientManager->str_tolower(ReceiveLoginMSG(clientManager->GetClientSocket(idx)));
         if (!std::all_of(username.begin(), username.end(), ::isalpha) || username == "login" || username == "signup" || username == "server") 
         {
-            running = EchoBack("Invalid username. Please enter a valid username:", clientManager->GetClientSocket(idx));
+            running = EchoBack("Invalid username. Please enter a valid username.", clientManager->GetClientSocket(idx));
         }
         else if (!clientManager->ClientExists(idx)) {
             running = EchoBack("User not found, re-enter username.", clientManager->GetClientSocket(idx));
@@ -63,7 +63,7 @@ void LoginClient::Login(int idx)
         }
         else if (attempts < 2) 
         {
-            running = EchoBack("Invalid password. Try again:", clientManager->GetClientSocket(idx));
+            running = EchoBack("Invalid password. Try again.", clientManager->GetClientSocket(idx));
             if (!running) { return; }
         }
         else 
@@ -76,7 +76,7 @@ void LoginClient::Login(int idx)
 
 void LoginClient::SignUp(int idx) 
 {
-    running = EchoBack("SignUp initiated, enter username:", clientManager->GetClientSocket(idx));
+    running = EchoBack("SignUp initiated, enter username.", clientManager->GetClientSocket(idx));
     if (!running) { return; }
 
     std::string username;
@@ -85,7 +85,7 @@ void LoginClient::SignUp(int idx)
         username = clientManager->str_tolower(ReceiveLoginMSG(clientManager->GetClientSocket(idx)));
         if (!std::all_of(username.begin(), username.end(), ::isalpha) || username == "login" || username == "signup" || username == "server") 
         {
-            running = EchoBack("Invalid username. Please enter a valid username:", clientManager->GetClientSocket(idx));
+            running = EchoBack("Invalid username. Please enter a valid username.", clientManager->GetClientSocket(idx));
         }
         else if (clientManager->ID_FromUsr(username) != -1) 
         {
@@ -105,7 +105,7 @@ void LoginClient::SignUp(int idx)
     {
         running = EchoBack("Enter new password.", clientManager->GetClientSocket(idx));
         password = ReceiveLoginMSG(clientManager->GetClientSocket(idx));
-        running = EchoBack("Verify password:", clientManager->GetClientSocket(idx));
+        running = EchoBack("Verify password.", clientManager->GetClientSocket(idx));
         verifyPassword = ReceiveLoginMSG(clientManager->GetClientSocket(idx));
         if (password != verifyPassword || password.empty()) 
         {

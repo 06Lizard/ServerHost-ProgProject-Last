@@ -28,7 +28,7 @@ void ClientHandler::ReceiveMSG()
         }
         else
         {
-            std::cerr << "Error receiving listening data: " << WSAGetLastError() << std::endl;
+            std::cerr << "Error receiving listening data. " << WSAGetLastError() << std::endl;
             break;
         }
     }
@@ -48,12 +48,12 @@ void ClientHandler::ProcessMessage(const std::string& msg)
         }
         else
         {
-            SendMSG("Recipient not found: ", clientManager->GetClientSocket(idx));
+            SendMSG("Recipient not found. ", clientManager->GetClientSocket(idx));
         }
     }
     else 
     {
-        SendMSG("Invalid message format received: ", clientManager->GetClientSocket(idx));
+        SendMSG("Invalid message format received. ", clientManager->GetClientSocket(idx));
     }
 }
 
@@ -63,12 +63,12 @@ std::future<int> ClientHandler::SendMSG(std::string msg, SOCKET* rcp)
         {
         if (send(*rcp, msg.c_str(), strlen(msg.c_str()), 0) == SOCKET_ERROR)
         {
-            std::cerr << "Error sending data: " << WSAGetLastError() << " with the message '" << msg << "'" << std::endl;
+            std::cerr << "Error sending data '" << WSAGetLastError() << "' with the message '" << msg << "'" << std::endl;
             return WSAGetLastError();
         }
         else
         {
-            std::cout << "Successfully sent message: " << msg << std::endl;
+            std::cout << "Successfully sent message '" << msg << "'" << std::endl;
             return 0;
         }
     });
