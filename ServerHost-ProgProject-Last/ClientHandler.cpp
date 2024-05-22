@@ -13,7 +13,8 @@ void ClientHandler::ReceiveMSG()
     char buffer[1024];
     int bytesReceived;
 
-    while (running) {
+    while (running) 
+    {
         bytesReceived = recv(*clientManager->GetClientSocket(idx), buffer, sizeof(buffer) - 1, 0);
         if (bytesReceived > 0) 
         {
