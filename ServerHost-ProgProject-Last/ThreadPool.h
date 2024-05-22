@@ -10,7 +10,7 @@ class ThreadPool
 {
 public:
     /// <summary>
-    /// 
+    /// Takes in the amount of threads we want to use in the pool
     /// </summary>
     /// <param name="numThreads"></param>
     ThreadPool(size_t numThreads);
@@ -21,7 +21,7 @@ public:
     ~ThreadPool();
 
     /// <summary>
-    /// 
+    /// this is what takes in tasks and quues them up in the threadpool
     /// </summary>
     /// <typeparam name="F"></typeparam>
     /// <typeparam name="...Args"></typeparam>
@@ -31,11 +31,11 @@ public:
     void enqueue(F&& f, Args&&... args);
 
 private:
-    std::vector<std::thread> threads;
-    std::queue<std::function<void()>> tasks;
-    std::mutex queueMutex;
-    std::condition_variable condition;
-    bool stop;
+    std::vector<std::thread> threads; // vector for all threads 
+    std::queue<std::function<void()>> tasks; // the task queue
+    std::mutex queueMutex;  // mutual exclude to make sure the tasts synchronice with eatchother
+    std::condition_variable condition; // condition to notify the states of diferent tasks on the threads 
+    bool stop; // just a bool to be able to stop the threadpool
 };
 
 template<class F, class... Args>

@@ -137,6 +137,7 @@
     <ClCompile Include="SocketManager.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="TMPChat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientHandler.h" />
@@ -145,8 +146,13 @@
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="Host.h" />
     <ClInclude Include="LoginClient.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SocketManager.h" />
     <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="TMPChat.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ServerHost-ProgProject-Last.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

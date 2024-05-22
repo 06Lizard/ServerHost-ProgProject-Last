@@ -9,6 +9,7 @@
 #include <atomic>
 #include <unordered_map>
 #include "Colors.h"
+#include "TMPChat.h"
 
 class Host : public Colors
 {
@@ -48,4 +49,10 @@ private:
     /// function that handles all clients that aree not logged in they
     /// </summary>
     void AddClient();
+
+
+    /// <summary>
+    /// TMP selution to talk from just server to clinet instead
+    /// </summary>
+    void TstStCMSG();
 };

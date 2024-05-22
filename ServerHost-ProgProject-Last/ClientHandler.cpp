@@ -8,7 +8,7 @@ ClientHandler::~ClientHandler()
     closesocket(*clientManager->GetClientSocket(idx));
 }
 
-void ClientHandler::ReceiveMSG() 
+std::future<void> ClientHandler::ReceiveMSG() 
 {
     char buffer[1024];
     int bytesReceived;

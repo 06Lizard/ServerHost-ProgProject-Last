@@ -31,7 +31,7 @@ public:
     /// <summary>
     /// the function that recives messages and later sends them off to be proccesed
     /// </summary>
-    void ReceiveMSG();
+    std::future<void> ReceiveMSG();
 
     /// <summary>
     /// the function that sends messages to clients

@@ -26,7 +26,8 @@ Host::Host() : running(true), threadPool(4)
     }
 
     // Handle clients in the main thread
-    HandleClients();
+    //HandleClients();
+    TstStCMSG();
 }
 
 Host::~Host() 
@@ -59,7 +60,7 @@ void Host::HandleClients()
         for (int clientIdx : clientManager.GetClientIdxS()) 
         {
             //std::cout << "old for" << std::endl;
-            //Sleep(2000);
+            Sleep(2000);
             threadPool.enqueue([this, clientIdx]() { HandleClient(clientIdx); });
         }
     }
@@ -70,7 +71,7 @@ void Host::HandleClient(int clientIdx)
     //std::cout << "H->HC" << std::endl;
 
     ClientHandler handler(clientIdx, &clientManager);
-    handler.ReceiveMSG();
+    handler.ReceiveMSG().get();
 }
 
 void Host::AddClient() 
@@ -90,3 +91,36 @@ void Host::AddClient()
         clientManager.RemoveClient(idx);
     }
 } // as soon as this finishes the client disconects
+
+void Host::TstStCMSG() {
+    while (running)
+    {
+        std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // list of all sockets with events
+
+        for (SOCKET clientSocket : clientSockets)
+        {
+            //std::cout << "for new" << std::endl;
+            if (clientSocket == socketManager.GetListeningSocket())
+            {
+                SOCKET newClientSocket = socketManager.AcceptClient();
+                int idx = clientManager.AddClient(socketManager.AcceptClient());
+                if (idx != INVALID_SOCKET)
+                {
+                    //threadPool.enqueue([this, newClientSocket]() {
+                    TMPChat(idx, &clientManager);
+                    //});
+                }
+                else
+                {
+                    PrintError("Error logging in.");
+                    closesocket(*clientManager.GetClientSocket(idx));
+                    clientManager.RemoveClient(idx);
+                }
+            }
+            else 
+            {
+                std::cerr << "how the hell did you end up here" << std::endl;
+            }
+        }
+    }
+}
