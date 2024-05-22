@@ -1,6 +1,7 @@
 #include "Host.h"
 
-Host::Host() : running(true), threadPool(4) {
+Host::Host() : running(true), threadPool(4) 
+{
     // Initialize Winsock
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) 
@@ -28,15 +29,18 @@ Host::Host() : running(true), threadPool(4) {
     HandleClients();
 }
 
-Host::~Host() {
+Host::~Host() 
+{
     running = false;
     socketManager.Close();
     WSACleanup();
     PrintWarning("Closed server.");
 }
 
-void Host::HandleClients() {
-    while (running) {
+void Host::HandleClients() 
+{
+    while (running) 
+    {
         std::vector<SOCKET> clientSockets = socketManager.CheckEvents(); // list of all sockets with events
 
         for (SOCKET clientSocket : clientSockets) 

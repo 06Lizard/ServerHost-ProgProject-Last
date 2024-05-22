@@ -42,7 +42,7 @@ bool SocketManager::Start(int port)
     }
     else
     {
-        PrintWarning("Server listening on socket");
+        PrintWarning("Server listening on socket.");
     }
 
     return true;

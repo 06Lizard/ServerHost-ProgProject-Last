@@ -5,19 +5,23 @@
 LoginClient::LoginClient(int idx, ClientManager* clientManager)
     : handler(idx, clientManager), clientManager(clientManager) 
 {
-    running = EchoBack("Type 'login' to login to server, type 'signup' to sign up to server", clientManager->GetClientSocket(idx));
+    running = EchoBack("Type 'login' to login to server, type 'signup' to sign up.", clientManager->GetClientSocket(idx));
 
-    while (running) {
+    while (running) 
+    {
         std::string msg = ReceiveLoginMSG(clientManager->GetClientSocket(idx));
-        if (msg == "login") {
+        if (msg == "login") 
+        {
             Login(idx);
             break;
         }
-        else if (msg == "signup") {
+        else if (msg == "signup") 
+        {
             SignUp(idx);
             break;
         }
-        else {
+        else 
+        {
             running = EchoBack("Invalid command. Please type 'login' or 'signup'.", clientManager->GetClientSocket(idx));
         }
     }
