@@ -3,6 +3,7 @@
 TMPChat::TMPChat(int idx, ClientManager* manager) 
 	: client(idx), handler(idx, manager), manager(manager)
 {
+	handler.SendMSG("Login successful", manager->GetClientSocket(client));
 	snd();
 	while (true) 
 	{		
